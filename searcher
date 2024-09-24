@@ -1,1 +1,118 @@
+#!/usr/bin/env python3
+# 导入必要的库
+import os  # 文件和目录处理
+import sys  # 系统操作，如获取命令行参数
+import fnmatch  # 用于文件名模式匹配
+import datetime  # 日期和时间处理
+import time  # 时间相关操作
 
+# 定义函数：在文件中搜索指定文本
+def search_in_file(file_path, text):
+    try:
+        # 打开文件，忽略编码错误
+        with open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
+            # 遍历文件的每一行，查找是否包含指定文本
+            for line in file:
+                if text in line:
+                    return True  # 如果找到匹配内容，返回True
+    except Exception as e:
+        # 如果读取文件出现错误，打印错误信息
+        print(f"Error reading file {file_path}: {e}")
+    return False  # 如果没有找到匹配内容或出错，返回False
+
+# 定义函数：通过日期范围筛选文件
+def search_by_date(file_path, start_date, end_date):
+    # 获取文件的修改时间
+    file_time = os.path.getmtime(file_path)
+    # 将修改时间转换为日期格式
+    file_date = datetime.datetime.fromtimestamp(file_time).date()
+    # 判断文件日期是否在给定的日期范围内
+    return start_date <= file_date <= end_date
+
+# 定义函数：搜索目录下的文件，支持按文件名、内容、扩展名和日期进行筛选
+def search_directory(directory, filename_pattern=None, content_pattern=None, file_extension=None, start_date=None, end_date=None):
+    # 遍历给定目录及其子目录
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            # 构造文件的完整路径
+            file_path = os.path.join(root, file)
+
+            # 根据文件名模式筛选文件
+            if filename_pattern and not fnmatch.fnmatch(file, filename_pattern):
+                continue  # 如果文件名不匹配，则跳过
+
+            # 根据文件扩展名筛选文件
+            if file_extension and not file.endswith(file_extension):
+                continue  # 如果文件扩展名不匹配，则跳过
+
+            # 根据日期范围筛选文件
+            if start_date and end_date:
+                if not search_by_date(file_path, start_date, end_date):
+                    continue  # 如果文件不在日期范围内，则跳过
+
+            # 根据文件内容筛选文件
+            if content_pattern and not search_in_file(file_path, content_pattern):
+                continue  # 如果文件内容不匹配，则跳过
+
+            # 如果所有条件都满足，打印匹配的文件路径
+            print(f"Match found: {file_path}")
+
+# 定义函数：解析日期范围
+def parse_date_range(date_range):
+    try:
+        # 分割日期范围字符串，假设格式为"YYYY-YYYY"
+        start_date_str, end_date_str = date_range.split('-')
+        # 将字符串转换为日期对象
+        start_date = datetime.datetime.strptime(start_date_str, '%Y').date()
+        end_date = datetime.datetime.strptime(end_date_str, '%Y').date()
+        return start_date, end_date  # 返回起始日期和结束日期
+    except ValueError:
+        # 如果日期格式不正确，输出错误信息并退出
+        print("Invalid date range format. Use: YYYY-YYYY")
+        sys.exit(1)
+
+# 主函数：处理命令行参数并调用搜索功能
+def main():
+    # 如果没有足够的参数，打印用法信息并退出
+    if len(sys.argv) < 2:
+        print("Usage: searcher [options] <search-parameters>")
+        sys.exit(1)
+
+    # 初始化搜索条件变量
+    filename_pattern = None
+    content_pattern = None
+    file_extension = None
+    start_date = None
+    end_date = None
+
+    # 获取命令行参数（忽略第一个，即脚本名）
+    args = sys.argv[1:]
+    i = 0
+
+    # 解析命令行参数
+    while i < len(args):
+        # 如果是内容搜索参数
+        if args[i] == "-c":
+            content_pattern = args[i + 1]
+            i += 2
+        # 如果是文件扩展名参数
+        elif args[i] == "-t":
+            file_extension = f".{args[i + 1]}"
+            i += 2
+        # 如果是日期范围参数
+        elif args[i] == "--date":
+            start_date, end_date = parse_date_range(args[i + 1])
+            i += 2
+        # 其他情况默认为文件名模式参数
+        else:
+            filename_pattern = args[i]
+            i += 1
+
+    # 获取当前工作目录
+    current_directory = os.getcwd()
+    # 调用搜索目录函数，传入各个参数
+    search_directory(current_directory, filename_pattern, content_pattern, file_extension, start_date, end_date)
+
+# 判断是否从命令行执行此脚本
+if __name__ == "__main__":
+    main()  # 调用主函数
