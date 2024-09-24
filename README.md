@@ -1,4 +1,4 @@
-EC602 Fall 2024
+#EC602 Fall 2024
 
 Assignment One
 
