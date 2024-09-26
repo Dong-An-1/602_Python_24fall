@@ -1,0 +1,118 @@
+#!/usr/bin/env python3
+# Import necessary libraries
+import os  # For file and directory handling
+import sys  # For system operations like retrieving command-line arguments
+import fnmatch  # For file name pattern matching
+import datetime  # For date and time handling
+import time  # For time-related operations
+
+# Define a function: Search for specified text within a file
+def search_in_file(file_path, text):
+    try:
+        # Open the file, ignoring encoding errors
+        with open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
+            # Iterate through each line in the file, looking for the specified text
+            for line in file:
+                if text in line:
+                    return True  # If the text is found, return True
+    except Exception as e:
+        # If there's an error reading the file, print an error message
+        print(f"Error reading file {file_path}: {e}")
+    return False  # Return False if no match is found or there's an error
+
+# Define a function: Filter files by date range
+def search_by_date(file_path, start_date, end_date):
+    # Get the modification time of the file
+    file_time = os.path.getmtime(file_path)
+    # Convert the modification time to a date format
+    file_date = datetime.datetime.fromtimestamp(file_time).date()
+    # Check if the file date is within the given date range
+    return start_date <= file_date <= end_date
+
+# Define a function: Search files in a directory, supporting filters by filename, content, extension, and date
+def search_directory(directory, filename_pattern=None, content_pattern=None, file_extension=None, start_date=None, end_date=None):
+    # Traverse the given directory and its subdirectories
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            # Construct the full file path
+            file_path = os.path.join(root, file)
+
+            # Filter files by filename pattern
+            if filename_pattern and not fnmatch.fnmatch(file, filename_pattern):
+                continue  # Skip if the filename doesn't match
+
+            # Filter files by extension
+            if file_extension and not file.endswith(file_extension):
+                continue  # Skip if the file extension doesn't match
+
+            # Filter files by date range
+            if start_date and end_date:
+                if not search_by_date(file_path, start_date, end_date):
+                    continue  # Skip if the file is not within the date range
+
+            # Filter files by content
+            if content_pattern and not search_in_file(file_path, content_pattern):
+                continue  # Skip if the file content doesn't match
+
+            # If all conditions are met, print the matching file path
+            print(f"Match found: {file_path}")
+
+# Define a function: Parse the date range
+def parse_date_range(date_range):
+    try:
+        # Split the date range string, assuming the format is "YYYY-YYYY"
+        start_date_str, end_date_str = date_range.split('-')
+        # Convert the strings to date objects
+        start_date = datetime.datetime.strptime(start_date_str, '%Y').date()
+        end_date = datetime.datetime.strptime(end_date_str, '%Y').date()
+        return start_date, end_date  # Return the start and end dates
+    except ValueError:
+        # If the date format is incorrect, print an error message and exit
+        print("Invalid date range format. Use: YYYY-YYYY")
+        sys.exit(1)
+
+# Main function: Process command-line arguments and invoke the search function
+def main():
+    # If there are not enough arguments, print usage information and exit
+    if len(sys.argv) < 2:
+        print("Usage: searcher [options] <search-parameters>")
+        sys.exit(1)
+
+    # Initialize search criteria variables
+    filename_pattern = None
+    content_pattern = None
+    file_extension = None
+    start_date = None
+    end_date = None
+
+    # Get command-line arguments (ignore the first, which is the script name)
+    args = sys.argv[1:]
+    i = 0
+
+    # Parse command-line arguments
+    while i < len(args):
+        # If it's the content search parameter
+        if args[i] == "-c":
+            content_pattern = args[i + 1]
+            i += 2
+        # If it's the file extension parameter
+        elif args[i] == "-t":
+            file_extension = f".{args[i + 1]}"
+            i += 2
+        # If it's the date range parameter
+        elif args[i] == "--date":
+            start_date, end_date = parse_date_range(args[i + 1])
+            i += 2
+        # Otherwise, assume it's the filename pattern parameter
+        else:
+            filename_pattern = args[i]
+            i += 1
+
+    # Get the current working directory
+    current_directory = os.getcwd()
+    # Invoke the directory search function, passing in the various parameters
+    search_directory(current_directory, filename_pattern, content_pattern, file_extension, start_date, end_date)
+
+# Check if the script is being run from the command line
+if __name__ == "__main__":
+    main()  # Call the main function
