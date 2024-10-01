@@ -1,3 +1,7 @@
+# 2024 year Dong An dong@bu.edu
+# 2024 year Shenghai Wu wshwsh@bu.edu
+# 2024 year Ziheng Qu heng@bu.edu
+
 import os  # For file and directory handling
 import sys  # For system operations like retrieving command-line arguments
 import fnmatch  # For file name pattern matching
