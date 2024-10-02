@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-# 2024 year Dong An dong@bu.edu
-# 2024 year Shenghan Wu wshwsh@bu.edu
-# 2024 year Ziheng Qu heng@bu.edu
+# Copyright 2024 Dong An dong@bu.edu
+# Copyright 2024 Shenghan Wu wshwsh@bu.edu
+# Copyright 2024 Ziheng Qu heng24@bu.edu
+
 
 import os  # For file and directory handling
 import sys  # For system operations like retrieving command-line arguments
