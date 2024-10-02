@@ -1,0 +1,161 @@
+#!/usr/bin/env python3
+
+# 2024 year Dong An dong@bu.edu
+# 2024 year Shenghan Wu wshwsh@bu.edu
+# 2024 year Ziheng Qu heng@bu.edu
+
+import os  # For file and directory handling
+import sys  # For system operations like retrieving command-line arguments
+import fnmatch  # For file name pattern matching
+import datetime  # For date and time handling
+import time  # For time-related operations
+
+
+# Define a function: Search for specified text within a file
+def search_in_file(file_path, text):
+    """
+    Search for a specified text in a given file.
+
+    Args:
+        file_path (str): Path to the file.
+        text (str): The text to search for.
+
+    Returns:
+        bool: True if text is found, False otherwise.
+    """
+    try:
+        # Open the file, ignoring encoding errors
+        with open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
+            # Iterate through each line in the file, looking for the specified text
+            for line in file:
+                if text in line:
+                    return True  # If the text is found, return True
+    except Exception as e:
+        # If there's an error reading the file, print an error message
+        print(f"Error reading file {file_path}: {e}")
+    return False  # Return False if no match is found or there's an error
+
+
+# Define a function: Filter files by date range
+def search_by_date(file_path, start_date, end_date):
+    """
+    Filter files by modification date.
+
+    Args:
+        file_path (str): Path to the file.
+        start_date (datetime.date): Start date for filtering.
+        end_date (datetime.date): End date for filtering.
+
+    Returns:
+        bool: True if file's modification date is within the range, False otherwise.
+    """
+    file_time = os.path.getmtime(file_path)
+    file_date = datetime.datetime.fromtimestamp(file_time).date()
+    return start_date <= file_date <= end_date
+
+
+# Define a function: Search files in a directory, supporting filters by filename, content, extension, and date
+def search_directory(directory, filename_pattern=None, content_pattern=None, file_extension=None, start_date=None,
+                     end_date=None):
+    """
+    Search for files in a directory based on filename, content, extension, and date range.
+
+    Args:
+        directory (str): The directory to search.
+        filename_pattern (str, optional): Pattern to match filenames.
+        content_pattern (str, optional): Pattern to match file content.
+        file_extension (str, optional): File extension to filter.
+        start_date (datetime.date, optional): Start date to filter by modification time.
+        end_date (datetime.date, optional): End date to filter by modification time.
+
+    Prints:
+        str: Matching file paths.
+    """
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            file_path = os.path.join(root, file)
+
+            # Combine filename and extension filtering
+            if (filename_pattern and not fnmatch.fnmatch(file, filename_pattern)) or (
+                    file_extension and not file.endswith(file_extension)):
+                continue
+
+            # Date range filtering
+            if start_date and end_date and not search_by_date(file_path, start_date, end_date):
+                continue
+
+            # Content filtering
+            if content_pattern and not search_in_file(file_path, content_pattern):
+                continue
+
+            print(f"Match found: {file_path}")
+
+
+# Define a function: Parse the date range
+def parse_date_range(date_range):
+    """
+    Parse the date range string in the format 'YYYY-MM-DD - YYYY-MM-DD' and return the start and end dates.
+
+    Args:
+        date_range (str): A string representing the date range in the format 'YYYY-MM-DD - YYYY-MM-DD'.
+
+    Returns:
+        tuple: A tuple containing the start date and end date as datetime.date objects.
+
+    Raises:
+        ValueError: If the input date range format is incorrect.
+    """
+    try:
+        start_date_str, end_date_str = date_range.split(' - ')
+        start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date()
+        end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date()
+        return start_date, end_date
+    except ValueError as e:
+        print(f"Invalid date range format '{date_range}'. Expected format: YYYY-MM-DD - YYYY-MM-DD. Error: {e}")
+        sys.exit(1)
+
+
+# Main function: Process command-line arguments and invoke the search function
+def main():
+    """
+    Main function to process command-line arguments and perform the file search.
+    """
+    if len(sys.argv) < 2:
+        print("Usage: searcher [options] <search-parameters>")
+        sys.exit(1)
+
+    # Initialize search criteria variables
+    filename_pattern = None
+    content_pattern = None
+    file_extension = None
+    start_date = None
+    end_date = None
+
+    # Get command-line arguments (ignore the first, which is the script name)
+    args = sys.argv[1:]
+    arg_index = 0
+
+    # Parse command-line arguments
+    while arg_index < len(args):
+        if args[arg_index] == "-c":
+            content_pattern = args[arg_index + 1]
+            arg_index += 2
+        elif args[arg_index] == "-t":
+            file_extension = f".{args[arg_index + 1]}"
+            arg_index += 2
+        elif args[arg_index] == "--date":
+            start_date, end_date = parse_date_range(args[arg_index + 1])
+            arg_index += 2
+        else:
+            filename_pattern = args[arg_index]
+            arg_index += 1
+
+    # Get the current working directory
+    current_directory = os.getcwd()
+    # Invoke the directory search function, passing in the various parameters
+    search_directory(current_directory, filename_pattern, content_pattern, file_extension, start_date, end_date)
+
+
+# Check if the script is being run from the command line
+if __name__ == "__main__":
+    main()  # Call the main function
