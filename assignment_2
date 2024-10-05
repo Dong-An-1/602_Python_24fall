@@ -1,0 +1,111 @@
+import json
+import csv
+import numpy as np
+import pandas as pd
+
+# 从 JSON 文件中读取学生信息
+def load_students(json_file):
+    with open(json_file, 'r') as file:
+        students = json.load(file)
+    return students
+
+# 将学生数据库保存为 CSV
+def save_students_to_csv(students, csv_file):
+    with open(csv_file, 'w', newline='') as file:
+        writer = csv.writer(file)
+        # 写入表头
+        writer.writerow(["First Name", "Last Name", "Student ID", "GPA", "Status"])
+        # 写入学生数据
+        for student in students:
+            writer.writerow([student["first_name"], student["last_name"],
+                             student["student_id"], student["GPA"],
+                             student["status"]])
+
+# 生成高斯分布的成绩
+def generate_grades(mean, std, num_students):
+    return np.random.normal(mean, std, num_students)
+
+# 生成测评的 CSV 文件
+def save_assessment_to_csv(assessment_name, student_ids, grades):
+    filename = f"{assessment_name}.csv"
+    with open(filename, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["Student ID", "Grade"])
+        for student_id, grade in zip(student_ids, grades):
+            writer.writerow([student_id, grade])
+
+# 从 CSV 文件中加载测评成绩
+def load_assessment_grades(assessment_name):
+    return pd.read_csv(f'{assessment_name}.csv')
+
+# 基于多个测评计算最终成绩
+def calculate_final_grade(student_id, assessments):
+    total_points = 0
+    max_points = 0
+    for assessment in assessments:
+        grades = load_assessment_grades(assessment)
+        grade = grades.loc[grades['Student ID'] == student_id, 'Grade'].values[0]
+        if grade != -1:  # 假设 -1 为缺席的成绩
+            total_points += grade
+        max_points += 100  # 假设每个测评满分为100分
+    return (total_points / max_points) * 100
+
+# 根据最终分数分配字母成绩
+def assign_letter_grade(score):
+    if score >= 93:
+        return 'A'
+    elif score >= 90:
+        return 'A-'
+    elif score >= 87:
+        return 'B+'
+    elif score >= 83:
+        return 'B'
+    elif score >= 80:
+        return 'B-'
+    elif score >= 77:
+        return 'C+'
+    elif score >= 73:
+        return 'C'
+    elif score >= 70:
+        return 'C-'
+    elif score >= 67:
+        return 'D+'
+    elif score >= 60:
+        return 'D'
+    else:
+        return 'F'
+
+# 计算所有学生的最终成绩
+def generate_final_grades(students, assessments):
+    final_grades = []
+    for student in students:
+        if student['status'] == 'Enrolled':
+            final_score = calculate_final_grade(student['student_id'], assessments)
+            letter_grade = assign_letter_grade(final_score)
+            final_grades.append({
+                'student_id': student['student_id'],
+                'final_score': final_score,
+                'letter_grade': letter_grade
+            })
+    return final_grades
+
+# 主程序
+if __name__ == "__main__":
+    # 加载学生信息
+    students = load_students('student_information.json')
+    save_students_to_csv(students, 'student_database.csv')
+    
+    # 生成测评成绩
+    student_ids = [student['student_id'] for student in students if student['status'] == 'Enrolled']
+    grades = generate_grades(mean=75, std=10, num_students=len(student_ids))
+    save_assessment_to_csv('homework_1', student_ids, grades)
+
+    # 假设有多个测评：作业、测试等
+    assessments = ['homework_1']  # 你可以加入更多的测评
+    
+    # 计算所有学生的最终成绩
+    final_grades = generate_final_grades(students, assessments)
+    
+    # 输出最终成绩
+    for grade in final_grades:
+        print(f"Student ID: {grade['student_id']}, Final Score: {grade['final_score']:.2f}, Letter Grade: {grade['letter_grade']}")
