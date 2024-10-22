@@ -1,0 +1,76 @@
+import os
+import time
+import numpy as np
+import json
+import pickle
+import pandas as pd
+
+def store_array(N, M, dtype, rnd, filename, fileformat):
+    # 生成随机的numpy数组
+    A = rnd(size=[N] * M).astype(dtype)
+    
+    start_time = time.time()
+
+    # 保存文件
+    if fileformat == "numpy":
+        np.save(filename, A)
+        save_time = time.time() - start_time
+        file_size = os.path.getsize(f"{filename}.npy")
+
+    elif fileformat == "txt":
+        np.savetxt(filename + ".txt", A)
+        save_time = time.time() - start_time
+        file_size = os.path.getsize(f"{filename}.txt")
+
+    elif fileformat == "json":
+        with open(filename + ".json", 'w') as f:
+            json.dump(A.tolist(), f)
+        save_time = time.time() - start_time
+        file_size = os.path.getsize(f"{filename}.json")
+
+    elif fileformat == "pickle":
+        with open(filename + ".pkl", 'wb') as f:
+            pickle.dump(A, f)
+        save_time = time.time() - start_time
+        file_size = os.path.getsize(f"{filename}.pkl")
+
+    elif fileformat == "csv":
+        pd.DataFrame(A).to_csv(filename + ".csv", index=False)
+        save_time = time.time() - start_time
+        file_size = os.path.getsize(f"{filename}.csv")
+
+    # 读取文件
+    start_time = time.time()
+
+    if fileformat == "numpy":
+        Aretrieved = np.load(f"{filename}.npy")
+        load_time = time.time() - start_time
+        os.remove(f"{filename}.npy")
+
+    elif fileformat == "txt":
+        Aretrieved = np.loadtxt(f"{filename}.txt")
+        load_time = time.time() - start_time
+        os.remove(f"{filename}.txt")
+
+    elif fileformat == "json":
+        with open(filename + ".json", 'r') as f:
+            Aretrieved = np.array(json.load(f))
+        load_time = time.time() - start_time
+        os.remove(f"{filename}.json")
+
+    elif fileformat == "pickle":
+        with open(filename + ".pkl", 'rb') as f:
+            Aretrieved = pickle.load(f)
+        load_time = time.time() - start_time
+        os.remove(f"{filename}.pkl")
+
+    elif fileformat == "csv":
+        Aretrieved = pd.read_csv(f"{filename}.csv").values
+        load_time = time.time() - start_time
+        os.remove(f"{filename}.csv")
+
+    # 计算均方误差 (MSE)
+    mse = np.mean((A - Aretrieved) ** 2)
+
+    return A, Aretrieved, {"save": save_time, "load": load_time, "size": file_size, "MSE": mse}
+
