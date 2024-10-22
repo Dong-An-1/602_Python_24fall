@@ -1,0 +1,32 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+# 模拟之前得到的测试结果
+formats = ['numpy', 'txt', 'json', 'pickle', 'csv']
+save_times = [0.00126, 0.04494, 0.02872, 0.00068, 0.05567]
+load_times = [0.00438, 0.01041, 0.00996, 0.00023, 0.01523]
+file_sizes = [80128, 250000, 202824, 80161, 192015]
+
+# 生成保存时间柱状图
+plt.figure(figsize=(10, 6))
+plt.bar(formats, save_times, color='skyblue')
+plt.title('Save Time Comparison Across Formats')
+plt.xlabel('File Format')
+plt.ylabel('Save Time (seconds)')
+plt.show()
+
+# 生成加载时间柱状图
+plt.figure(figsize=(10, 6))
+plt.bar(formats, load_times, color='lightgreen')
+plt.title('Load Time Comparison Across Formats')
+plt.xlabel('File Format')
+plt.ylabel('Load Time (seconds)')
+plt.show()
+
+# 生成文件大小柱状图
+plt.figure(figsize=(10, 6))
+plt.bar(formats, file_sizes, color='salmon')
+plt.title('File Size Comparison Across Formats')
+plt.xlabel('File Format')
+plt.ylabel('File Size (bytes)')
+plt.show()
