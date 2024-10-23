@@ -1,0 +1,111 @@
+import numpy as np
+import time
+import matplotlib.pyplot as plt
+
+
+def time_function(func, *args, **kwargs):
+    start = time.time()
+    result = func(*args, **kwargs)
+    end = time.time()
+    return end - start, result
+
+def add_arrays(arr1, arr2):
+    with np.errstate(over='ignore'):
+     return arr1 + arr2
+
+def multiply_arrays(arr1, arr2):
+    with np.errstate(over='ignore'):
+     return arr1 * arr2
+
+# Define array sizes to test
+sizes = [10, 1000, 100000, 1000000]
+
+# Define the integer and float types to test
+numpy_int_types = [np.int8, np.int16, np.int32, np.int64]
+numpy_float_types = [np.float16, np.float32, np.float64]
+
+python_types = [int, float]
+
+def python_addition_loop(arr1, arr2):
+    result = []
+    for i in range(len(arr1)):
+        result.append(arr1[i] + arr2[i])
+    return result
+
+
+# Function to test native Python operations vs NumPy operations
+def test_performance(sizes, numpy_types, python_types):
+    results = {}
+    for size in sizes:
+        # Generate arrays
+        python_int_array = list(range(size))
+        python_float_array = [float(i) for i in range(size)]
+
+        for np_type in numpy_types:
+            np_array1 = np.arange(size, dtype=np_type)
+            np_array2 = np.arange(size, dtype=np_type)
+
+            # Time NumPy addition
+            np_time_add, _ = time_function(add_arrays, np_array1, np_array2)
+            # Time NumPy multiplication
+            np_time_mul, _ = time_function(multiply_arrays, np_array1, np_array2)
+
+            # Store results
+            results[(size, np_type.__name__, 'add')] = np_time_add
+            results[(size, np_type.__name__, 'mul')] = np_time_mul
+
+        for py_type in python_types:
+            if py_type == int:
+                py_array1 = python_int_array
+                py_array2 = python_int_array
+            else:
+                py_array1 = python_float_array
+                py_array2 = python_float_array
+
+            # Time Python addition with a loop
+            py_time_add, _ = time_function(python_addition_loop, py_array1, py_array2)
+
+            # Store results
+            results[(size, py_type.__name__, 'add')] = py_time_add
+
+    return results
+
+
+def plot_results_fixed(results, sizes):
+    plt.figure(figsize=(12, 8))
+
+    for size in sizes:
+        np_add_vals = []
+        np_mul_vals = []
+        py_add_vals = []
+        types = []
+
+        for key, val in results.items():
+            if key[0] == size:
+                if key[2] == 'add':
+                    if 'int' in key[1] or 'float' in key[1]:
+                        np_add_vals.append(val)
+                        types.append(key[1])
+                elif key[2] == 'mul' and key[1] in types:
+                    np_mul_vals.append(val)
+
+        # Plot the results, ensuring that x and y dimensions match
+        x_vals = np.arange(len(types))
+
+        if len(np_add_vals) == len(x_vals):
+            plt.plot(x_vals, np_add_vals, label=f'NumPy Add (size={size})')
+        if len(np_mul_vals) == len(x_vals):
+            plt.plot(x_vals, np_mul_vals, label=f'NumPy Multiply (size={size})')
+        if len(py_add_vals) == len(x_vals):
+            plt.plot(x_vals[:len(py_add_vals)], py_add_vals, label=f'Python Add Loop (size={size})')
+
+    plt.xticks(np.arange(len(types)), types, rotation=45)
+    plt.xlabel("Data Types")
+    plt.ylabel("Time (seconds)")
+    plt.legend()
+    plt.title("Performance Comparison: Python vs NumPy Operations")
+    plt.show()
+
+
+results = test_performance(sizes, numpy_int_types + numpy_float_types, python_types)
+plot_results_fixed(results, sizes)
