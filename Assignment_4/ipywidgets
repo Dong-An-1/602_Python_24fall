@@ -1,62 +1,81 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import ipywidgets as widgets
-from ipywidgets import interact, VBox, HTML
+from ipywidgets import interact, VBox, HBox, HTML
 
-# 绘制正态分布
-def draw_normal(mean, std_dev):
-    x = np.linspace(mean - 4*std_dev, mean + 4*std_dev, 500)
-    y = (1/(std_dev * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x - mean)/std_dev)**2)
+# Function to plot the normal distribution
+def plot_distribution(mean, std_dev, scale_factor):
+    # Generate x values, fixed to the range [-10, 10]
+    x = np.linspace(-10, 10, 500)
+    # Calculate y values using the normal distribution formula, apply the scale factor
+    y = (1/(std_dev * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x - mean)/std_dev)**2) * scale_factor
     
+    # Create the plot
     plt.figure(figsize=(8, 5))
     plt.plot(x, y)
     
-    # 标注均值和标准差
+    # Add a vertical line for the mean
     plt.axvline(mean, color='r', linestyle='--')
-    plt.fill_between(x, y, where=((x > mean - std_dev) & (x < mean + std_dev)), color='yellow', alpha=0.3)
-    plt.fill_between(x, y, where=((x > mean - 2*std_dev) & (x < mean + 2*std_dev)), color='blue', alpha=0.2)
     
-    plt.title(f"Normal Distribution (Mean: {mean}, Std Dev: {std_dev})", fontsize=14)
+    # Highlight standard deviation areas
+    highlight_std_area(x, y, mean, std_dev)
+    
+    # Set title and labels
+    plt.title(f"Normal Distribution (Mean: {mean}, Std Dev: {std_dev}, Scale: {scale_factor})")
     plt.xlabel("x")
-    plt.ylabel("Probability")
+    plt.ylabel("Probability Density")
+    
+    # Fix both x and y axes ranges so they do not change when sliders are moved
+    plt.xlim(-10, 10)  # Fix x-axis range
+    plt.ylim(0, 1.5)   # Fix y-axis range
+    
+    # Display grid and the plot
     plt.grid(True)
     plt.show()
 
-# 创建解释性文本
-def get_explanation(mean, std_dev):
+# Function to highlight the areas within 1 and 2 standard deviations
+def highlight_std_area(x, y, mean, std_dev):
+    plt.fill_between(x, y, where=((x > mean - std_dev) & (x < mean + std_dev)), color='yellow', alpha=0.3)
+    plt.fill_between(x, y, where=((x > mean - 2*std_dev) & (x < mean + 2*std_dev)), color='blue', alpha=0.2)
+
+# Function to generate explanatory text for the current plot
+def get_explanation(mean, std_dev, scale_factor):
     text = f"""
     <h4>Normal Distribution Details</h4>
     <p><strong>Mean (μ):</strong> The red dashed line marks the mean at x = {mean}.</p>
-    <p><strong>Std Dev (σ):</strong> The spread of the curve is determined by the standard deviation. 
+    <p><strong>Std Dev (σ):</strong> The curve spread is determined by the standard deviation. 
     A smaller σ means a narrower distribution, and a larger one makes it wider.</p>
     <p>About <strong>68%</strong> of the data lies within 1 standard deviation of the mean (yellow area), 
     and <strong>95%</strong> lies within 2 standard deviations (blue area).</p>
+    <p><strong>Scale Factor:</strong> The curve has been scaled by a factor of {scale_factor}, adjusting its height accordingly.</p>
     """
     return HTML(value=text)
 
-# 滑动条
-mean_slider = widgets.FloatSlider(value=0, min=-5, max=5, step=0.1, description='Mean')
-std_slider = widgets.FloatSlider(value=1, min=0.1, max=2, step=0.1, description='Std Dev')
+# Define sliders and reset button
+mean_input = widgets.FloatSlider(value=0, min=-5, max=5, step=0.1, description='Mean')
+std_input = widgets.FloatSlider(value=1, min=0.1, max=2, step=0.1, description='Std Dev')
+scale_input = widgets.FloatSlider(value=1, min=0.1, max=3, step=0.1, description='Scale')  # New scale factor slider
 reset_button = widgets.Button(description="Reset")
 
-# 重置功能
+# Function to reset slider values to defaults
 def reset_values(b):
-    mean_slider.value = 0
-    std_slider.value = 1
+    mean_input.value = 0
+    std_input.value = 1
+    scale_input.value = 1  # Reset the scale factor
 
+# Link the reset button to the reset function
 reset_button.on_click(reset_values)
 
-# 更新图像和解释
-def update(mean, std_dev):
-    draw_normal(mean, std_dev)
-    display(get_explanation(mean, std_dev))
+# Update plot and explanation based on current slider values
+def update_plot(mean, std_dev, scale_factor):
+    plot_distribution(mean, std_dev, scale_factor)
+    display(get_explanation(mean, std_dev, scale_factor))
 
-# 布局
-controls = VBox([mean_slider, std_slider, reset_button])
+# Arrange controls in a horizontal box
+controls = HBox([mean_input, std_input, scale_input, reset_button])
 
-# 动态交互
-interact(update, mean=mean_slider, std_dev=std_slider)
+# Enable interactive updates when sliders are moved
+interact(update_plot, mean=mean_input, std_dev=std_input, scale_factor=scale_input)
 
-# 显示控件
+# Display the controls
 display(controls)
-
