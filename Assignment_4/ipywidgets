@@ -1,0 +1,62 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import ipywidgets as widgets
+from ipywidgets import interact, VBox, HTML
+
+# 绘制正态分布
+def draw_normal(mean, std_dev):
+    x = np.linspace(mean - 4*std_dev, mean + 4*std_dev, 500)
+    y = (1/(std_dev * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x - mean)/std_dev)**2)
+    
+    plt.figure(figsize=(8, 5))
+    plt.plot(x, y)
+    
+    # 标注均值和标准差
+    plt.axvline(mean, color='r', linestyle='--')
+    plt.fill_between(x, y, where=((x > mean - std_dev) & (x < mean + std_dev)), color='yellow', alpha=0.3)
+    plt.fill_between(x, y, where=((x > mean - 2*std_dev) & (x < mean + 2*std_dev)), color='blue', alpha=0.2)
+    
+    plt.title(f"Normal Distribution (Mean: {mean}, Std Dev: {std_dev})", fontsize=14)
+    plt.xlabel("x")
+    plt.ylabel("Probability")
+    plt.grid(True)
+    plt.show()
+
+# 创建解释性文本
+def get_explanation(mean, std_dev):
+    text = f"""
+    <h4>Normal Distribution Details</h4>
+    <p><strong>Mean (μ):</strong> The red dashed line marks the mean at x = {mean}.</p>
+    <p><strong>Std Dev (σ):</strong> The spread of the curve is determined by the standard deviation. 
+    A smaller σ means a narrower distribution, and a larger one makes it wider.</p>
+    <p>About <strong>68%</strong> of the data lies within 1 standard deviation of the mean (yellow area), 
+    and <strong>95%</strong> lies within 2 standard deviations (blue area).</p>
+    """
+    return HTML(value=text)
+
+# 滑动条
+mean_slider = widgets.FloatSlider(value=0, min=-5, max=5, step=0.1, description='Mean')
+std_slider = widgets.FloatSlider(value=1, min=0.1, max=2, step=0.1, description='Std Dev')
+reset_button = widgets.Button(description="Reset")
+
+# 重置功能
+def reset_values(b):
+    mean_slider.value = 0
+    std_slider.value = 1
+
+reset_button.on_click(reset_values)
+
+# 更新图像和解释
+def update(mean, std_dev):
+    draw_normal(mean, std_dev)
+    display(get_explanation(mean, std_dev))
+
+# 布局
+controls = VBox([mean_slider, std_slider, reset_button])
+
+# 动态交互
+interact(update, mean=mean_slider, std_dev=std_slider)
+
+# 显示控件
+display(controls)
+
