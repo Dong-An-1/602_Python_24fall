@@ -306,26 +306,29 @@ plot_opencv_distribution()
 
 #For this task, ploty and ipywidgets seems to be the better tools to visualize normal distribution with the use of sliders.
 
-/*In this Project, we examine the performance and limitations of three popular Python-based visualization tools—ipywidgets, Plotly, and OpenCV—when deployed in the Google Colab environment. 
-Google Colab presents unique constraints due to its browser-based nature and limited support for certain interactive functionalities, which influences the suitability of each tool for educational and analytical purposes.
+"This project examines the performance and limitations of three popular Python-based visualization tools—ipywidgets, Plotly, and OpenCV—within the Google Colab environment. 
+Since Colab is browser-based and has limited support for certain interactive features, these constraints directly influence each tool’s suitability for educational and analytical applications.
 
-ipywidgets: In a standard Jupyter Notebook environment, ipywidgets provides a straightforward and efficient means to create interactive controls (e.g., sliders, buttons) that can dynamically update visualizations in real time. 
-However, in the Google Colab environment, ipywidgets encounters limitations in rendering real-time interactions due to Colab's lack of native support for direct widget interactivity. Although some basic widget functionalities 
-can be enabled with additional setup, the overall responsiveness and interactivity are generally compromised compared to traditional Jupyter Notebooks. Consequently, ipywidgets in Colab is best suited for displaying static controls 
-or configurations that do not rely on frequent updates, making it less ideal for high-frequency real-time data manipulation tasks.
+ipywidgets:
+In a standard Jupyter Notebook, ipywidgets offers a straightforward way to create interactive controls like sliders and buttons, allowing users to update visualizations in real-time. However, 
+in Colab, ipywidgets faces challenges due to a lack of native support for direct interactivity, meaning real-time responses are often limited. 
+Although basic widget functionality can be enabled with additional setup, the overall responsiveness and interactivity are reduced compared to a typical Jupyter Notebook. 
+As a result, ipywidgets in Colab works best for static controls or configurations that don’t require frequent updates, making it less effective for high-frequency, real-time data manipulation tasks.
 
-Plotly: Plotly operates effectively in Google Colab, as Colab's built-in HTML rendering capabilities allow full utilization of Plotly's interactive features. Plotly supports a wide range of interactive elements, 
-including zooming, panning, and tooltip displays, which are preserved in Colab with minimal configuration. This makes Plotly an optimal choice for presenting high-quality, interactive visualizations directly within Colab notebooks. 
-For applications requiring complex data visualizations or interactive exploration of mathematical and statistical models, Plotly in Colab offers an efficient and user-friendly solution, providing robust functionality for educational 
-and data analysis applications.
+Plotly:
+Plotly performs well in Colab. Colab’s built-in HTML rendering capabilities allow Plotly’s interactive features, such as zooming, panning, and tooltips, to be utilized with minimal configuration. 
+This makes Plotly an excellent choice for presenting high-quality, interactive visualizations directly within Colab. 
+For applications requiring complex data visualization or interactive exploration of mathematical and statistical models, Plotly provides an efficient and user-friendly solution, making it ideal for educational and data analysis tasks in this environment.
 
-OpenCV: OpenCV, while powerful for image processing and custom graphical manipulations, faces substantial limitations within Colab. Colab lacks support for the interactive OpenCV windows used to capture mouse events, 
-manage dynamic sliders, or execute real-time updates within a dedicated OpenCV GUI window. As a result, only static images processed by OpenCV can be displayed, typically through secondary visualization libraries such as matplotlib. 
-This restricts OpenCV's application in Colab to non-interactive image processing tasks. OpenCV is therefore limited to scenarios where static images can adequately demonstrate the intended results, making it less suitable for applications 
-requiring continuous user interaction or real-time parameter adjustments.
+OpenCV:
+OpenCV is a powerful tool for image processing and graphical manipulation but faces significant limitations in Colab. 
+Colab does not support OpenCV’s interactive windows, which means that features like mouse events, dynamic sliders, or real-time updates in a dedicated OpenCV GUI window are unavailable. 
+As such, only static images processed by OpenCV can be displayed, typically through supplementary libraries like Matplotlib. 
+This restricts OpenCV's utility in Colab to static image processing tasks, making it unsuitable for applications that require continuous user interaction or real-time parameter adjustments.
 
-#Conclusion
-In summary, within the Google Colab environment, Plotly emerges as the most suitable tool for generating high-quality, interactive visualizations, effectively supporting a broad range of data analysis and educational tasks. ipywidgets, 
-while constrained, can still be used effectively for displaying static controls or configuring non-dynamic elements, though it is suboptimal for real-time updates. OpenCV, limited to static image processing in Colab, 
-is not recommended for interactive applications in this environment. For visualizations such as normal distribution models that benefit from user interactivity, Plotly is recommended as the primary tool in Google Colab to achieve the desired functionality and user experience.*/
+Conclusion
+In the Google Colab environment, Plotly stands out as the best tool for creating high-quality, interactive visualizations, effectively supporting a wide range of educational and data analysis needs. 
+While ipywidgets is limited, it can still be useful for displaying static controls or setting up non-dynamic elements, though it’s not ideal for scenarios requiring real-time updates. 
+OpenCV, restricted to static image processing, is not recommended for interactive applications in Colab.
+For visualizations such as normal distribution models that benefit from user interactivity, Plotly is recommended as the primary tool in Colab to achieve the intended functionality and user experience."
 
