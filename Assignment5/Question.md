@@ -28,8 +28,6 @@ $$
 
 1. **定义 `Polynomial` 类**
    - 该类表示单个多项式，如
-![Polynomial](https://latex.codecogs.com/svg.latex?P(x)=a_n%20x^n%20+%20a_{n-1}%20x^{n-1}%20+%20...%20+%20a_1%20x%20+%20a_0)
-该类表示单个多项式，如：
 
 $$ P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0 $$
 
