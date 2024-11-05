@@ -24,4 +24,5 @@ Task Details
 
 Define the Polynomial class
 This class represents a single polynomial such as
+$$ P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0 $$
 
