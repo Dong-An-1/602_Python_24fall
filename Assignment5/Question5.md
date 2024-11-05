@@ -80,3 +80,7 @@ This assignment requires students to write Python code to implement two classes:
    - **Example Usage** (10 points): Are there clear examples of how to use the code?
    - **User Interface (10 points)**: Is the CLI clear, and does it facilitate smooth operation?
 
+Example programs and solutions
+
+1. Example program
+
