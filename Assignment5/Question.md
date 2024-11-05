@@ -88,9 +88,11 @@ $$ P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0 $$
 ### 实例程序以及解决方案
 1.**实例程序**
 
-   class PolynomialHandler:
-    # Initialization function that takes a list of polynomial coefficients
-    def __init__(self, coefficients):
+
+ 
+      class PolynomialHandler:
+          # Initialization function that takes a list of polynomial coefficients
+         def __init__(self, coefficients):
         # Check if the coefficient list is valid
         if not coefficients or any(not isinstance(c, (int, float)) for c in coefficients):
             raise ValueError("Please enter a valid list of coefficients!")  # Raise an error if invalid
