@@ -1,3 +1,6 @@
+# Copyright 2024 Dong An dong@bu.edu
+# Copyright 2024 Shenghan Wu wshwsh@bu.edu
+# Copyright 2024 Ziheng Qu heng24@bu.edu
 ### Assignment Description
 
 **Title: Modeling Polynomial Vectors and Matrices**
