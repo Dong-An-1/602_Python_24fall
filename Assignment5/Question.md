@@ -304,10 +304,10 @@ Below is an example of the final code structure, including the main classes and 
        main()
 
 
-### 额外建议
+### Additional suggestions
 
-- 如果允许，使用单元测试框架（如 `unittest`）编写一些自动化测试用例，以确保代码的正确性。
-- 在实现过程中，每完成一个步骤，都可以先测试该部分功能，确保无误后再继续下一步。这样可以及时发现问题，减少调试难度。
-- 按照分数分配（正确性、代码规范、错误处理、可读性和注释、示例用法和用户界面），逐步检查代码并调整，以符合作业评分标准。
+- If allowed, write some automated test cases using a unit testing framework (e.g. `unittest`) to ensure that the code is correct.
+- During the implementation process, every time you complete a step, you can test that part of the functionality to make sure it is correct before continuing to the next step. This can detect problems in time and reduce debugging difficulties.
+- Check the code step by step and adjust it to meet the assignment grading criteria according to the score distribution (correctness, code specification, error handling, readability and comments, sample usage, and user interface).
 
 
