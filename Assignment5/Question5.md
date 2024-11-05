@@ -25,9 +25,7 @@ This assignment requires students to write Python code to implement two classes:
 1. **Define the `Polynomial` Class**
    - This class represents a single polynomial, like:
 
-   $$
-   P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0
-   $$
+   $$P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0$$
 
    - Required features:
      - **Initialization**: Initialize the polynomial with a list of coefficients. For example, `Polynomial([2, 0, 3])` represents \(2x^2 + 3\).
