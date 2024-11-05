@@ -25,4 +25,3 @@ Task Details
 Define the Polynomial class
 This class represents a single polynomial such as
 
-Translated with DeepL.com (free version)
