@@ -82,10 +82,7 @@ $$ P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0 $$
 ### Sample Program and Solution
 
 1. **Sample Program**
-
-
- 
-      class PolynomialHandler:
+     class PolynomialHandler:
           # Initialization function that takes a list of polynomial coefficients
          def __init__(self, coefficients):
         # Check if the coefficient list is valid
@@ -93,8 +90,8 @@ $$ P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0 $$
             raise ValueError("Please enter a valid list of coefficients!")  # Raise an error if invalid
         self.coefficients = coefficients  # Store the coefficient list
 
-    # Format polynomial for printing
-    def __str__(self):
+         # Format polynomial for printing
+           def __str__(self):
         result = ""
         for i, coef in enumerate(self.coefficients[::-1]):  # Print from highest to lowest degree
             if coef != 0:  # Skip terms with 0 coefficient
@@ -104,7 +101,7 @@ $$ P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0 $$
                     result += str(coef)  # Directly output the constant term
         return result
 
-    # Method for polynomial addition
+       # Method for polynomial addition
     def add(self, other):
         max_len = max(len(self.coefficients), len(other.coefficients))
         result = [0] * max_len
