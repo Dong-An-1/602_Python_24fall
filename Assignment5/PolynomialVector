@@ -1,1 +1,29 @@
+class PolynomialVector:
+    def __init__(self, polynomials):
+        if not polynomials:
+            raise ValueError("多项式向量不能为空")
+        if not all(isinstance(p, Polynomial) for p in polynomials):
+            raise TypeError("所有元素必须是 Polynomial 对象")
+        self.polynomials = polynomials
+
+    def __add__(self, other):
+        if not isinstance(other, PolynomialVector):
+            raise TypeError("只能与另一个 PolynomialVector 相加")
+        if len(self.polynomials) != len(other.polynomials):
+            raise ValueError("向量长度必须相同")
+        result = [p1 + p2 for p1, p2 in zip(self.polynomials, other.polynomials)]
+        return PolynomialVector(result)
+
+    def __mul__(self, scalar):
+        if not isinstance(scalar, (int, float)):
+            raise TypeError("标量乘法的因子必须是数字")
+        result = [Polynomial([c * scalar for c in p.coefficients]) for p in self.polynomials]
+        return PolynomialVector(result)
+
+    def derivative(self):
+        result = [p.derivative() for p in self.polynomials]
+        return PolynomialVector(result)
+
+    def __str__(self):
+        return "[" + ", ".join(str(p) for p in self.polynomials) + "]"
 
