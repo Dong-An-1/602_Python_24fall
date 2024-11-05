@@ -87,6 +87,7 @@ $$ P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0 $$
 
 ### 实例程序以及解决方案
 1.**实例程序**
+
 class PolynomialHandler:
     # 初始化函数，接收多项式的系数列表
     def __init__(self, coefficients):
