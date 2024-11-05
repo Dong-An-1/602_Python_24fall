@@ -89,119 +89,228 @@ $$ P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0 $$
 1.**实例程序**
 
 class PolynomialHandler:
-    # 初始化函数，接收多项式的系数列表
+    # Initialization function that takes a list of polynomial coefficients
     def __init__(self, coefficients):
-        # 检查系数列表是否有效
+        # Check if the coefficient list is valid
         if not coefficients or any(not isinstance(c, (int, float)) for c in coefficients):
-            raise ValueError("请输入一个有效的系数列表！")  # 如果不符合要求则抛出错误
-        self.coefficients = coefficients  # 保存系数列表
+            raise ValueError("Please enter a valid list of coefficients!")  # Raise an error if invalid
+        self.coefficients = coefficients  # Store the coefficient list
 
-    # 用于打印多项式的格式化输出
+    # Format polynomial for printing
     def __str__(self):
         result = ""
-        for i, coef in enumerate(self.coefficients[::-1]):  # 从高次项到低次项输出
-            if coef != 0:  # 忽略为0的项
+        for i, coef in enumerate(self.coefficients[::-1]):  # Print from highest to lowest degree
+            if coef != 0:  # Skip terms with 0 coefficient
                 if i > 0:
-                    result += f" + {coef}x^{i}"  # 只有指数大于0时才显示 x^i
+                    result += f" + {coef}x^{i}"  # Show x^i only if the exponent is greater than 0
                 else:
-                    result += str(coef)  # 常数项直接输出
+                    result += str(coef)  # Directly output the constant term
         return result
 
-    # 多项式相加的方法
+    # Method for polynomial addition
     def add(self, other):
         max_len = max(len(self.coefficients), len(other.coefficients))
         result = [0] * max_len
         for i in range(max_len):
-            # 如果系数列表足够长，则取相应的值并相加
+            # Add corresponding values if the coefficient lists are long enough
             if i < len(self.coefficients):
                 result[i] += self.coefficients[i]
             if i < len(other.coefficients):
                 result[i] += other.coefficients[i]
         return PolynomialHandler(result)
 
-    # 计算多项式的导数
+    # Compute the derivative of the polynomial
     def derivative(self):
-        # 如果只有常数项，导数就是0
+        # If there’s only a constant term, the derivative is 0
         if len(self.coefficients) <= 1:
             return PolynomialHandler([0])
         result = []
-        # 每项的导数是原来的系数乘以它的指数
+        # The derivative of each term is the original coefficient multiplied by its exponent
         for i in range(1, len(self.coefficients)):
             result.append(i * self.coefficients[i])
         return PolynomialHandler(result)
 
-    # 求多项式在某个 x 值下的计算结果
+    # Evaluate the polynomial at a given x value
     def evaluate(self, x):
         total = 0
-        # 累加每一项的值
+        # Accumulate the value of each term
         for i, coef in enumerate(self.coefficients):
             total += coef * (x ** i)
         return total
 
 
-# 主程序函数
+# Main function of the program
 def main():
-    print("欢迎使用多项式计算器！")
+    print("Welcome to the Polynomial Calculator!")
 
-    # 主循环，用于显示主菜单
+    # Main loop to display the main menu
     while True:
-        print("\n请选择操作：")
-        print("1. 创建并操作一个多项式")
-        print("2. 退出程序")
+        print("\nPlease choose an option:")
+        print("1. Create and operate on a polynomial")
+        print("2. Exit program")
 
-        choice = input("输入您的选择: ")
+        choice = input("Enter your choice: ")
 
         if choice == "1":
-            # 输入并创建一个多项式
-            coeffs = input("请输入多项式的系数（用空格分隔，例如：2 3 -1 表示 2 + 3x - x^2）: ")
-            coeffs = list(map(float, coeffs.split()))  # 将输入转换为浮点数列表
-            poly = PolynomialHandler(coeffs)  # 创建多项式对象
-            print("您创建的多项式是:", poly)
+            # Input and create a polynomial
+            coeffs = input("Enter the polynomial coefficients (separated by spaces, e.g., '2 3 -1' represents 2 + 3x - x^2): ")
+            coeffs = list(map(float, coeffs.split()))  # Convert input to a list of floats
+            poly = PolynomialHandler(coeffs)  # Create the polynomial object
+            print("The polynomial you created is:", poly)
 
-            # 子菜单循环，用于多项式操作
+            # Sub-menu loop for polynomial operations
             while True:
-                print("\n请选择操作：")
-                print("1. 多项式相加")
-                print("2. 求导")
-                print("3. 计算多项式值")
-                print("4. 返回主菜单")
+                print("\nPlease choose an operation:")
+                print("1. Add another polynomial")
+                print("2. Find the derivative")
+                print("3. Evaluate the polynomial")
+                print("4. Return to the main menu")
 
-                sub_choice = input("输入您的选择: ")
+                sub_choice = input("Enter your choice: ")
 
                 if sub_choice == "1":
-                    # 输入另一个多项式，进行相加
-                    other_coeffs = input("请输入另一个多项式的系数（用空格分隔）: ")
+                    # Input another polynomial for addition
+                    other_coeffs = input("Enter the coefficients of another polynomial (separated by spaces): ")
                     other_coeffs = list(map(float, other_coeffs.split()))
                     other_poly = PolynomialHandler(other_coeffs)
                     result = poly.add(other_poly)
-                    print("相加结果:", result)
+                    print("Result of addition:", result)
 
                 elif sub_choice == "2":
-                    # 计算导数
-                    print("导数结果:", poly.derivative())
+                    # Calculate the derivative
+                    print("Derivative result:", poly.derivative())
 
                 elif sub_choice == "3":
-                    # 计算多项式在指定 x 值下的结果
-                    x_value = float(input("请输入 x 的值: "))
-                    print("多项式在 x =", x_value, "处的值为:", poly.evaluate(x_value))
+                    # Evaluate the polynomial at a specified x value
+                    x_value = float(input("Enter the value of x: "))
+                    print("The value of the polynomial at x =", x_value, "is:", poly.evaluate(x_value))
 
                 elif sub_choice == "4":
-                    # 返回主菜单
+                    # Return to the main menu
                     break
 
                 else:
-                    print("无效选择，请重新输入。")
+                    print("Invalid choice, please try again.")
 
         elif choice == "2":
-            print("感谢使用，程序已退出。")
+            print("Thank you for using the program. Exiting now.")
             break
 
         else:
-            print("无效选择，请重新输入。")
+            print("Invalid choice, please try again.")
 
 
-# 程序入口，运行主函数
+# Program entry point, runs the main function
 if __name__ == "__main__":
     main()
+
+
+    
 2. **解决方案**
+
+### 1. **创建 `Polynomial` 类**：单个多项式的基础
+
+#### 问题
+- 如何表示多项式的系数？
+- 如何实现多项式的加法、求导和评估？
+
+#### 推荐解决方案
+- 定义一个 `Polynomial` 类，构造函数接受系数列表。可以使用列表来表示系数，从常数项开始，例如，`[3, 0, 2]` 表示多项式 $3 + 2x^2$。
+- 实现多项式的加法：检查两个多项式的长度，逐项相加。如果两个多项式的长度不同，确保对齐短多项式的低阶项。
+- 实现求导方法：遍历系数列表，将每项的系数乘以对应的幂次来生成导数。比如，$3x^2 + 2x + 1$ 的导数是 $6x + 2$。
+- 实现评估方法：在给定的 `x` 值下计算多项式的值，使用 `sum(coef * (x ** i) for i, coef in enumerate(self.coefficients))` 来计算多项式的总值。
+
+### 2. **创建 `PolynomialVector` 类**：多项式向量
+
+#### 问题
+- 如何在一个向量中包含多个多项式？
+- 如何实现多项式向量的加法、标量乘法和求导？
+
+#### 推荐解决方案
+- 定义 `PolynomialVector` 类，该类接受 `Polynomial` 对象的列表作为向量。
+- 实现加法：确保两个向量的长度相同，然后逐项相加。使用 `Polynomial` 的 `add` 方法来加对应项。
+- 实现标量乘法：遍历向量中的每个多项式，将每个多项式与标量相乘。
+- 实现向量求导：遍历向量中的每个多项式，调用 `Polynomial` 的 `derivative` 方法，并返回新的 `PolynomialVector`。
+
+### 3. **创建 `PolynomialMatrix` 类**：多项式矩阵
+
+#### 问题
+- 如何在矩阵中包含多个多项式？
+- 如何实现矩阵加法、矩阵乘法、转置和求导？
+
+#### 推荐解决方案
+- 定义 `PolynomialMatrix` 类，该类接受二维 `Polynomial` 对象的列表，表示矩阵的行和列。
+- 实现加法：检查两个矩阵的维度是否相同，如果相同，逐元素相加。
+- 实现矩阵乘法：确保两个矩阵的列数和行数匹配（矩阵1的列数等于矩阵2的行数）。遍历矩阵元素，使用 `Polynomial` 的 `add` 方法相加并生成新的 `PolynomialMatrix`。
+- 实现矩阵转置：创建一个新的矩阵，将行和列交换。
+- 实现矩阵求导：遍历矩阵的每个元素，调用 `Polynomial` 的 `derivative` 方法，生成一个新的 `PolynomialMatrix`。
+
+### 4. **实现错误处理**
+
+#### 问题
+- 如何在输入不合法数据时处理错误？
+
+#### 推荐解决方案
+- 在初始化多项式时检查系数列表是否为空或包含非数字。
+- 在多项式、向量或矩阵加法中检查长度或维度是否匹配，不匹配时抛出 `ValueError`。
+- 在矩阵乘法中，确保矩阵的维度满足乘法条件，不满足时抛出错误。
+- 在用户输入时捕获异常（例如，输入非数字导致的转换错误），并提示用户重新输入。
+
+### 5. **实现 CLI（命令行界面）**
+
+#### 问题
+- 如何设计用户友好的界面，方便用户输入多项式、向量和矩阵并执行运算？
+
+#### 推荐解决方案
+- 设计一个简单的文本菜单，让用户选择操作类型（创建多项式、向量或矩阵，执行加法、求导等）。
+- 根据用户选择的操作，提示输入相关的数据，例如多项式的系数、向量的大小、矩阵的行列等。
+- 为每个操作提供输出结果，方便用户理解操作效果。
+- 在错误处理部分，捕获所有异常，打印出友好的错误信息，并让用户重新输入。
+
+### 6. **测试与调试**
+
+#### 问题
+- 如何确保所有操作的正确性？
+
+#### 推荐解决方案
+- 为 `Polynomial`、`PolynomialVector` 和 `PolynomialMatrix` 类的每个方法编写测试用例。确保加法、求导和评估等操作的结果正确。
+- 测试不同的输入数据（如空列表、非数字输入、不同长度的向量和矩阵等），确保错误处理机制有效。
+- 测试 CLI 界面的每个选项，确保用户可以正确执行每个操作，并得到合理的提示。
+
+### 最终代码结构示例
+
+以下是最终代码的结构示例，包含主要类和 CLI 界面的框架：
+
+
+# Polynomial class
+class Polynomial:
+    # Class definition and method implementation
+    ...
+
+# Polynomial vector class
+class PolynomialVector:
+    # Class definition and method implementation
+    ...
+
+# Polynomial matrix class
+class PolynomialMatrix:
+    # Class definition and method implementation
+    ...
+
+# Command-line interface main function
+def main():
+    # User interaction and operation selection
+    ...
+
+# Main program entry point
+if __name__ == "__main__":
+    main()
+
+
+### 额外建议
+
+- 如果允许，使用单元测试框架（如 `unittest`）编写一些自动化测试用例，以确保代码的正确性。
+- 在实现过程中，每完成一个步骤，都可以先测试该部分功能，确保无误后再继续下一步。这样可以及时发现问题，减少调试难度。
+- 按照分数分配（正确性、代码规范、错误处理、可读性和注释、示例用法和用户界面），逐步检查代码并调整，以符合作业评分标准。
+
 
