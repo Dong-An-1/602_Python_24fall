@@ -1,17 +1,17 @@
 class Polynomial:
     def __init__(self, coefficients):
         if not coefficients:
-            raise ValueError("Coefficient list cannot be empty")
+            raise ValueError("系数列表不能为空")
         if not all(isinstance(c, (int, float)) for c in coefficients):
-            raise TypeError("All coefficients must be numbers")
-        # Remove trailing zero coefficients
+            raise TypeError("所有系数必须是数字")
+        # 去除高次项的零系数
         while coefficients and coefficients[-1] == 0:
             coefficients.pop()
         self.coefficients = coefficients
 
     def __add__(self, other):
         if not isinstance(other, Polynomial):
-            raise TypeError("Can only add another Polynomial")
+            raise TypeError("只能与另一个 Polynomial 相加")
         from itertools import zip_longest
         result_coeffs = [a + b for a, b in zip_longest(
             self.coefficients, other.coefficients, fillvalue=0)]
@@ -35,54 +35,3 @@ class Polynomial:
                 terms.append(term)
         return " + ".join(terms) if terms else "0"
 
-
-# Testing initialization
-try:
-    p1 = Polynomial([3, 2, 1])  # Represents the polynomial 3 + 2x + x^2
-    p2 = Polynomial([1, 0, 3])  # Represents the polynomial 1 + 3x^2
-    print("Initialization Test:")
-    print("p1:", p1)  # Expected output: 3 + 2x + x^2
-    print("p2:", p2)  # Expected output: 1 + 3x^2
-except Exception as e:
-    print("Initialization Test Failed:", e)
-
-# Testing addition
-try:
-    p3 = p1 + p2
-    print("\nAddition Test:")
-    print("p1 + p2:", p3)  # Expected output: 4 + 2x + 4x^2
-except Exception as e:
-    print("Addition Test Failed:", e)
-
-# Testing derivative
-try:
-    p4 = p1.derivative()
-    print("\nDerivative Test:")
-    print("Derivative of p1:", p4)  # Expected output: 2 + 2x
-except Exception as e:
-    print("Derivative Test Failed:", e)
-
-# Testing evaluation
-try:
-    value_at_2 = p1.evaluate(2)
-    print("\nEvaluation Test:")
-    print("p1 evaluated at x=2:", value_at_2)  # Expected output: 11
-except Exception as e:
-    print("Evaluation Test Failed:", e)
-
-# Exception testing
-print("\nException Testing:")
-try:
-    Polynomial([])
-except ValueError as e:
-    print("Empty list test passed:", e)
-
-try:
-    Polynomial([1, "a", 3])
-except TypeError as e:
-    print("Non-numeric coefficient test passed:", e)
-
-try:
-    p1 + 3
-except TypeError as e:
-    print("Addition type error test passed:", e)
