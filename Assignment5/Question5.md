@@ -83,4 +83,119 @@ This assignment requires students to write Python code to implement two classes:
 Example programs and solutions
 
 1. Example program
+  class PolynomialHandler:
+      # Initialization function that takes a list of polynomial coefficients
+     def __init__(self, coefficients):
+    # Check if the coefficient list is valid
+    if not coefficients or any(not isinstance(c, (int, float)) for c in coefficients):
+        raise ValueError("Please enter a valid list of coefficients!")  # Raise an error if invalid
+    self.coefficients = coefficients  # Store the coefficient list
+
+# Format polynomial for printing
+def __str__(self):
+    result = ""
+    for i, coef in enumerate(self.coefficients[::-1]):  # Print from highest to lowest degree
+        if coef != 0:  # Skip terms with 0 coefficient
+            if i > 0:
+                result += f" + {coef}x^{i}"  # Show x^i only if the exponent is greater than 0
+            else:
+                result += str(coef)  # Directly output the constant term
+    return result
+
+# Method for polynomial addition
+def add(self, other):
+    max_len = max(len(self.coefficients), len(other.coefficients))
+    result = [0] * max_len
+    for i in range(max_len):
+        # Add corresponding values if the coefficient lists are long enough
+        if i < len(self.coefficients):
+            result[i] += self.coefficients[i]
+        if i < len(other.coefficients):
+            result[i] += other.coefficients[i]
+    return PolynomialHandler(result)
+
+# Compute the derivative of the polynomial
+def derivative(self):
+    # If there’s only a constant term, the derivative is 0
+    if len(self.coefficients) <= 1:
+        return PolynomialHandler([0])
+    result = []
+    # The derivative of each term is the original coefficient multiplied by its exponent
+    for i in range(1, len(self.coefficients)):
+        result.append(i * self.coefficients[i])
+    return PolynomialHandler(result)
+
+# Evaluate the polynomial at a given x value
+def evaluate(self, x):
+    total = 0
+    # Accumulate the value of each term
+    for i, coef in enumerate(self.coefficients):
+        total += coef * (x ** i)
+    return total
+
+
+ # Main function of the program
+ def main():
+print("Welcome to the Polynomial Calculator!")
+
+# Main loop to display the main menu
+while True:
+    print("\nPlease choose an option:")
+    print("1. Create and operate on a polynomial")
+    print("2. Exit program")
+
+    choice = input("Enter your choice: ")
+
+    if choice == "1":
+        # Input and create a polynomial
+        coeffs = input("Enter the polynomial coefficients (separated by spaces, e.g., '2 3 -1' represents 2 + 3x - x^2): ")
+        coeffs = list(map(float, coeffs.split()))  # Convert input to a list of floats
+        poly = PolynomialHandler(coeffs)  # Create the polynomial object
+        print("The polynomial you created is:", poly)
+
+        # Sub-menu loop for polynomial operations
+        while True:
+            print("\nPlease choose an operation:")
+            print("1. Add another polynomial")
+            print("2. Find the derivative")
+            print("3. Evaluate the polynomial")
+            print("4. Return to the main menu")
+
+            sub_choice = input("Enter your choice: ")
+
+            if sub_choice == "1":
+                # Input another polynomial for addition
+                other_coeffs = input("Enter the coefficients of another polynomial (separated by spaces): ")
+                other_coeffs = list(map(float, other_coeffs.split()))
+                other_poly = PolynomialHandler(other_coeffs)
+                result = poly.add(other_poly)
+                print("Result of addition:", result)
+
+            elif sub_choice == "2":
+                # Calculate the derivative
+                print("Derivative result:", poly.derivative())
+
+            elif sub_choice == "3":
+                # Evaluate the polynomial at a specified x value
+                x_value = float(input("Enter the value of x: "))
+                print("The value of the polynomial at x =", x_value, "is:", poly.evaluate(x_value))
+
+            elif sub_choice == "4":
+                # Return to the main menu
+                break
+
+            else:
+                print("Invalid choice, please try again.")
+
+    elif choice == "2":
+        print("Thank you for using the program. Exiting now.")
+        break
+
+    else:
+        print("Invalid choice, please try again.")
+
+
+  # Program entry point, runs the main function
+    if __name__ == "__main__":
+     main()
 
