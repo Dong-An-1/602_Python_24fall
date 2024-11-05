@@ -1,1 +1,54 @@
+class PolynomialMatrix:
+    def __init__(self, matrix):
+        if not matrix:
+            raise ValueError("矩阵不能为空")
+        row_length = len(matrix[0])
+        for row in matrix:
+            if len(row) != row_length:
+                raise ValueError("所有行的长度必须相同")
+            if not all(isinstance(p, Polynomial) for p in row):
+                raise TypeError("所有元素必须是 Polynomial 对象")
+        self.matrix = matrix
+
+    def __add__(self, other):
+        if not isinstance(other, PolynomialMatrix):
+            raise TypeError("只能与另一个 PolynomialMatrix 相加")
+        if len(self.matrix) != len(other.matrix) or len(self.matrix[0]) != len(other.matrix[0]):
+            raise ValueError("矩阵维度必须相同")
+        result = []
+        for row_self, row_other in zip(self.matrix, other.matrix):
+            result_row = [p1 + p2 for p1, p2 in zip(row_self, row_other)]
+            result.append(result_row)
+        return PolynomialMatrix(result)
+
+    def __mul__(self, other):
+        if not isinstance(other, PolynomialMatrix):
+            raise TypeError("只能与另一个 PolynomialMatrix 相乘")
+        if len(self.matrix[0]) != len(other.matrix):
+            raise ValueError("前一个矩阵的列数必须等于后一个矩阵的行数")
+        result = []
+        for row in self.matrix:
+            result_row = []
+            for col in zip(*other.matrix):
+                sum_p = Polynomial([0])
+                for p1, p2 in zip(row, col):
+                    product_coeffs = [0] * (len(p1.coefficients) + len(p2.coefficients) - 1)
+                    for i, a in enumerate(p1.coefficients):
+                        for j, b in enumerate(p2.coefficients):
+                            product_coeffs[i + j] += a * b
+                    sum_p = sum_p + Polynomial(product_coeffs)
+                result_row.append(sum_p)
+            result.append(result_row)
+        return PolynomialMatrix(result)
+
+    def transpose(self):
+        transposed_matrix = list(map(list, zip(*self.matrix)))
+        return PolynomialMatrix(transposed_matrix)
+
+    def derivative(self):
+        result = [ [p.derivative() for p in row] for row in self.matrix ]
+        return PolynomialMatrix(result)
+
+    def __str__(self):
+        return "\n".join(["[" + ", ".join(str(p) for p in row) + "]" for row in self.matrix])
 
