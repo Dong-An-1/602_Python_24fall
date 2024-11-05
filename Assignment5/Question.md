@@ -205,82 +205,80 @@ if __name__ == "__main__":
 
   
 
-3. **解决方案**
+### Solution
 
- ### 1. **创建 `Polynomial` 类**：单个多项式的基础
+### 1. **Creating the `Polynomial` Class**: Basis of a Single Polynomial
 
-#### 问题
-- 如何表示多项式的系数？
-- 如何实现多项式的加法、求导和评估？
+#### Problem
+- How do we represent the coefficients of a polynomial?
+- How do we implement polynomial addition, differentiation, and evaluation?
 
-#### 推荐解决方案
-- 定义一个 `Polynomial` 类，构造函数接受系数列表。可以使用列表来表示系数，从常数项开始，例如，`[3, 0, 2]` 表示多项式 $3 + 2x^2$。
-- 实现多项式的加法：检查两个多项式的长度，逐项相加。如果两个多项式的长度不同，确保对齐短多项式的低阶项。
-- 实现求导方法：遍历系数列表，将每项的系数乘以对应的幂次来生成导数。比如`2x^2 + 3x + 1`的导数是 $6x + 2$。
-- 实现评估方法：在给定的 `x` 值下计算多项式的值，使用 `sum(coef * (x ** i) for i, coef in enumerate(self.coefficients))` 来计算多项式的总值。
+#### Recommended Solution
+- Define a `Polynomial` class with a constructor that accepts a list of coefficients. This list can represent the coefficients, starting from the constant term. For example, `[3, 0, 2]` represents the polynomial \(3 + 2x^2\).
+- Implement polynomial addition: Check the lengths of the two polynomials and add them term by term. If the lengths differ, ensure that the shorter polynomial aligns with the lower terms of the result.
+- Implement differentiation: Iterate through the list of coefficients, multiplying each term’s coefficient by its exponent to generate the derivative. For example, the derivative of `2x^2 + 3x + 1` is \(6x + 2\).
+- Implement evaluation: Calculate the polynomial’s value for a given `x` by using `sum(coef * (x ** i) for i, coef in enumerate(self.coefficients))` to compute the total value of the polynomial.
 
-### 2. **创建 `PolynomialVector` 类**：多项式向量
+### 2. **Creating the `PolynomialVector` Class**: Polynomial Vector
 
-#### 问题
-- 如何在一个向量中包含多个多项式？
-- 如何实现多项式向量的加法、标量乘法和求导？
+#### Problem
+- How do we contain multiple polynomials within a vector?
+- How do we implement vector addition, scalar multiplication, and differentiation?
 
-#### 推荐解决方案
-- 定义 `PolynomialVector` 类，该类接受 `Polynomial` 对象的列表作为向量。
-- 实现加法：确保两个向量的长度相同，然后逐项相加。使用 `Polynomial` 的 `add` 方法来加对应项。
-- 实现标量乘法：遍历向量中的每个多项式，将每个多项式与标量相乘。
-- 实现向量求导：遍历向量中的每个多项式，调用 `Polynomial` 的 `derivative` 方法，并返回新的 `PolynomialVector`。
+#### Recommended Solution
+- Define a `PolynomialVector` class that accepts a list of `Polynomial` objects as a vector.
+- Implement addition: Ensure that both vectors are of the same length, then add them term by term. Use the `add` method of `Polynomial` to add corresponding terms.
+- Implement scalar multiplication: Iterate over each polynomial in the vector, multiplying each one by the scalar.
+- Implement vector differentiation: Differentiate each polynomial in the vector by calling the `derivative` method of `Polynomial`, and return a new `PolynomialVector`.
 
-### 3. **创建 `PolynomialMatrix` 类**：多项式矩阵
+### 3. **Creating the `PolynomialMatrix` Class**: Polynomial Matrix
 
-#### 问题
-- 如何在矩阵中包含多个多项式？
-- 如何实现矩阵加法、矩阵乘法、转置和求导？
+#### Problem
+- How do we contain multiple polynomials within a matrix?
+- How do we implement matrix addition, matrix multiplication, transpose, and differentiation?
 
-#### 推荐解决方案
-- 定义 `PolynomialMatrix` 类，该类接受二维 `Polynomial` 对象的列表，表示矩阵的行和列。
-- 实现加法：检查两个矩阵的维度是否相同，如果相同，逐元素相加。
-- 实现矩阵乘法：确保两个矩阵的列数和行数匹配（矩阵1的列数等于矩阵2的行数）。遍历矩阵元素，使用 `Polynomial` 的 `add` 方法相加并生成新的 `PolynomialMatrix`。
-- 实现矩阵转置：创建一个新的矩阵，将行和列交换。
-- 实现矩阵求导：遍历矩阵的每个元素，调用 `Polynomial` 的 `derivative` 方法，生成一个新的 `PolynomialMatrix`。
+#### Recommended Solution
+- Define a `PolynomialMatrix` class that accepts a 2D list of `Polynomial` objects, representing the rows and columns of the matrix.
+- Implement addition: Check if both matrices have the same dimensions, and if so, add them element by element.
+- Implement matrix multiplication: Ensure the number of columns in the first matrix matches the number of rows in the second matrix. Traverse matrix elements, using the `add` method of `Polynomial` to sum and generate the result as a new `PolynomialMatrix`.
+- Implement matrix transpose: Create a new matrix by swapping rows and columns.
+- Implement matrix differentiation: Differentiate each polynomial in the matrix by calling the `derivative` method of `Polynomial`, generating a new `PolynomialMatrix`.
 
-### 4. **实现错误处理**
+### 4. **Implementing Error Handling**
 
-#### 问题
-- 如何在输入不合法数据时处理错误？
+#### Problem
+- How should we handle invalid input?
 
-#### 推荐解决方案
-- 在初始化多项式时检查系数列表是否为空或包含非数字。
-- 在多项式、向量或矩阵加法中检查长度或维度是否匹配，不匹配时抛出 `ValueError`。
-- 在矩阵乘法中，确保矩阵的维度满足乘法条件，不满足时抛出错误。
-- 在用户输入时捕获异常（例如，输入非数字导致的转换错误），并提示用户重新输入。
+#### Recommended Solution
+- When initializing a polynomial, check if the coefficient list is empty or contains non-numeric values.
+- In polynomial, vector, or matrix addition, check if lengths or dimensions match; if not, raise a `ValueError`.
+- In matrix multiplication, ensure the matrix dimensions are compatible for multiplication; if not, raise an error.
+- For user input, catch exceptions (e.g., conversion errors for non-numeric input) and prompt users to re-enter valid data.
 
-### 5. **实现 CLI（命令行界面）**
+### 5. **Implementing the CLI (Command-Line Interface)**
 
-#### 问题
-- 如何设计用户友好的界面，方便用户输入多项式、向量和矩阵并执行运算？
+#### Problem
+- How can we design a user-friendly interface that allows users to input polynomials, vectors, and matrices and perform operations?
 
-#### 推荐解决方案
-- 设计一个简单的文本菜单，让用户选择操作类型（创建多项式、向量或矩阵，执行加法、求导等）。
-- 根据用户选择的操作，提示输入相关的数据，例如多项式的系数、向量的大小、矩阵的行列等。
-- 为每个操作提供输出结果，方便用户理解操作效果。
-- 在错误处理部分，捕获所有异常，打印出友好的错误信息，并让用户重新输入。
+#### Recommended Solution
+- Design a simple text menu that allows users to select the type of operation (create a polynomial, vector, or matrix, perform addition, differentiation, etc.).
+- Based on the selected operation, prompt the user to input relevant data, such as polynomial coefficients, vector size, or matrix dimensions.
+- Provide output for each operation so users can easily interpret the results.
+- In the error handling section, catch all exceptions, display user-friendly error messages, and prompt users to re-enter valid data.
 
-### 6. **测试与调试**
+### 6. **Testing and Debugging**
 
-#### 问题
-- 如何确保所有操作的正确性？
+#### Problem
+- How do we ensure the correctness of all operations?
 
-#### 推荐解决方案
-- 为 `Polynomial`、`PolynomialVector` 和 `PolynomialMatrix` 类的每个方法编写测试用例。确保加法、求导和评估等操作的结果正确。
-- 测试不同的输入数据（如空列表、非数字输入、不同长度的向量和矩阵等），确保错误处理机制有效。
-- 测试 CLI 界面的每个选项，确保用户可以正确执行每个操作，并得到合理的提示。
+#### Recommended Solution
+- Write test cases for each method in the `Polynomial`, `PolynomialVector`, and `PolynomialMatrix` classes to verify that addition, differentiation, and evaluation produce correct results.
+- Test a variety of inputs (e.g., empty lists, non-numeric input, vectors, and matrices of different lengths) to ensure that error handling is effective.
+- Test each option in the CLI to verify that users can execute each operation correctly and receive appropriate prompts.
 
-### 最终代码结构示例
+### Final Code Structure Example
 
-以下是最终代码的结构示例，包含主要类和 CLI 界面的框架：
-
-
+Below is an example of the final code structure, including the main classes and the CLI framework:
     # Polynomial class
      class Polynomial:
     # Class definition and method implementation
