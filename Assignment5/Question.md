@@ -88,7 +88,7 @@ $$ P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0 $$
 ### 实例程序以及解决方案
 1.**实例程序**
 
-class PolynomialHandler:
+   class PolynomialHandler:
     # Initialization function that takes a list of polynomial coefficients
     def __init__(self, coefficients):
         # Check if the coefficient list is valid
@@ -139,8 +139,8 @@ class PolynomialHandler:
         return total
 
 
-# Main function of the program
-def main():
+     # Main function of the program
+     def main():
     print("Welcome to the Polynomial Calculator!")
 
     # Main loop to display the main menu
@@ -200,9 +200,9 @@ def main():
             print("Invalid choice, please try again.")
 
 
-# Program entry point, runs the main function
-if __name__ == "__main__":
-    main()
+      # Program entry point, runs the main function
+        if __name__ == "__main__":
+         main()
 
 
     
