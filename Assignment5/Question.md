@@ -79,7 +79,6 @@ $$ P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0 $$
    - **Readability and Comments** (10 points): Is the code easy to read, with sufficient comments?
    - **Example Usage** (10 points): Are there clear examples of how to use the code?
    - **User Interface (10 points)**: Is the CLI clear, and does it facilitate smooth operation?
-
 ### Sample Program and Solution
 
 1. **Sample Program**
