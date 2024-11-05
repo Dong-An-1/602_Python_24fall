@@ -82,6 +82,9 @@ $$ P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0 $$
 ### Sample Program and Solution
 
 1. **Sample Program**
+
+
+```python
 class PolynomialHandler:
        # Initialization function that takes a list of polynomial coefficients
     def __init__(self, coefficients):
@@ -197,6 +200,7 @@ def main():
     # Program entry point, runs the main function
 if __name__ == "__main__":
     main()
+```
 
 
   
