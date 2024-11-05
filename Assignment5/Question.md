@@ -115,8 +115,7 @@ $$ P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0 $$
             if i < len(other.coefficients):
                 result[i] += other.coefficients[i]
         return PolynomialHandler(result)
-
-    # Compute the derivative of the polynomial
+   # Compute the derivative of the polynomial
     def derivative(self):
         # If there’s only a constant term, the derivative is 0
         if len(self.coefficients) <= 1:
@@ -201,7 +200,7 @@ $$ P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0 $$
         if __name__ == "__main__":
          main()
 
-2. **解决方案**
+3. **解决方案**
 
  ### 1. **创建 `Polynomial` 类**：单个多项式的基础
 
