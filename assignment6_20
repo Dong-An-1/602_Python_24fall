@@ -1,3 +1,7 @@
+# Copyright 2024 Dong An dong@bu.edu
+# Copyright 2024 Shenghan Wu wshwsh@bu.edu
+# Copyright 2024 Ziheng Qu heng24@bu.edu
+
 wedding20.py:4:1: E302 expected 2 blank lines, found 1
 wedding20.py:4:15: W291 trailing whitespace
 wedding20.py:7:1: W293 blank line contains whitespace
