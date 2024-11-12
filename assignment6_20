@@ -1,16 +1,121 @@
-Total style errors: 121
-42      E111 indentation is not a multiple of 4
-1       E221 multiple spaces before operator
-6       E225 missing whitespace around operator
-18      E231 missing whitespace after ','
-4       E261 at least two spaces before inline comment
-2       E262 inline comment should start with '# '
-1       E271 multiple spaces after keyword
-2       E275 missing whitespace after keyword
-1       E302 expected 2 blank lines, found 1
-3       E303 too many blank lines (2)
-23      E501 line too long (99 > 79 characters)
-4       E703 statement ends with a semicolon
-4       W291 trailing whitespace
-1       W292 no newline at end of file
-9       W293 blank line contains whitespace
+wedding20.py:4:1: E302 expected 2 blank lines, found 1
+wedding20.py:4:15: W291 trailing whitespace
+wedding20.py:7:1: W293 blank line contains whitespace
+wedding20.py:8:31: E262 inline comment should start with '# '
+wedding20.py:9:21: E225 missing whitespace around operator
+wedding20.py:10:33: E262 inline comment should start with '# '
+wedding20.py:11:80: E501 line too long (99 > 79 characters)
+wedding20.py:14:1: W293 blank line contains whitespace
+wedding20.py:15:29: E231 missing whitespace after ','
+wedding20.py:15:41: E261 at least two spaces before inline comment
+wedding20.py:15:80: E501 line too long (86 > 79 characters)
+wedding20.py:16:56: W291 trailing whitespace
+wedding20.py:19:80: E501 line too long (90 > 79 characters)
+wedding20.py:21:20: E225 missing whitespace around operator
+wedding20.py:22:1: W293 blank line contains whitespace
+wedding20.py:23:15: E275 missing whitespace after keyword
+wedding20.py:24:1: W293 blank line contains whitespace
+wedding20.py:26:21: E225 missing whitespace around operator
+wedding20.py:27:80: E501 line too long (91 > 79 characters)
+wedding20.py:27:92: W291 trailing whitespace
+wedding20.py:28:48: E261 at least two spaces before inline comment
+wedding20.py:28:80: E501 line too long (91 > 79 characters)
+wedding20.py:29:80: E501 line too long (102 > 79 characters)
+wedding20.py:30:80: E501 line too long (85 > 79 characters)
+wedding20.py:31:80: E501 line too long (104 > 79 characters)
+wedding20.py:32:75: E261 at least two spaces before inline comment
+wedding20.py:32:80: E501 line too long (122 > 79 characters)
+wedding20.py:33:80: E501 line too long (85 > 79 characters)
+wedding20.py:35:80: E501 line too long (136 > 79 characters)
+wedding20.py:36:80: E501 line too long (88 > 79 characters)
+wedding20.py:39:1: W293 blank line contains whitespace
+wedding20.py:40:1: W293 blank line contains whitespace
+wedding20.py:41:5: E303 too many blank lines (2)
+wedding20.py:41:37: E261 at least two spaces before inline comment
+wedding20.py:41:80: E501 line too long (86 > 79 characters)
+wedding20.py:45:1: W293 blank line contains whitespace
+wedding20.py:46:22: E225 missing whitespace around operator
+wedding20.py:46:80: E501 line too long (94 > 79 characters)
+wedding20.py:50:23: E225 missing whitespace around operator
+wedding20.py:50:80: E501 line too long (112 > 79 characters)
+wedding20.py:52:80: E501 line too long (100 > 79 characters)
+wedding20.py:54:80: E501 line too long (98 > 79 characters)
+wedding20.py:56:80: E501 line too long (143 > 79 characters)
+wedding20.py:57:56: E231 missing whitespace after ','
+wedding20.py:57:80: E501 line too long (196 > 79 characters)
+wedding20.py:58:80: E501 line too long (180 > 79 characters)
+wedding20.py:59:80: E501 line too long (100 > 79 characters)
+wedding20.py:59:101: W291 trailing whitespace
+wedding20.py:61:80: E501 line too long (168 > 79 characters)
+wedding20.py:62:80: E501 line too long (93 > 79 characters)
+wedding20.py:65:1: W293 blank line contains whitespace
+wedding20.py:66:4: E271 multiple spaces after keyword
+wedding20.py:66:34: E231 missing whitespace after ','
+wedding20.py:67:3: E111 indentation is not a multiple of 4
+wedding20.py:68:3: E111 indentation is not a multiple of 4
+wedding20.py:69:17: E231 missing whitespace after ','
+wedding20.py:69:30: E231 missing whitespace after ','
+wedding20.py:70:3: E111 indentation is not a multiple of 4
+wedding20.py:71:17: E231 missing whitespace after ','
+wedding20.py:71:24: E231 missing whitespace after ','
+wedding20.py:76:1: E303 too many blank lines (4)
+wedding20.py:77:3: E111 indentation is not a multiple of 4
+wedding20.py:78:3: E111 indentation is not a multiple of 4
+wedding20.py:79:3: E111 indentation is not a multiple of 4
+wedding20.py:81:3: E111 indentation is not a multiple of 4
+wedding20.py:82:3: E111 indentation is not a multiple of 4
+wedding20.py:84:3: E111 indentation is not a multiple of 4
+wedding20.py:85:3: E111 indentation is not a multiple of 4
+wedding20.py:87:3: E111 indentation is not a multiple of 4
+wedding20.py:88:3: E111 indentation is not a multiple of 4
+wedding20.py:90:3: E111 indentation is not a multiple of 4
+wedding20.py:91:3: E111 indentation is not a multiple of 4
+wedding20.py:93:3: E111 indentation is not a multiple of 4
+wedding20.py:94:3: E111 indentation is not a multiple of 4
+wedding20.py:96:3: E111 indentation is not a multiple of 4
+wedding20.py:97:3: E111 indentation is not a multiple of 4
+wedding20.py:99:3: E111 indentation is not a multiple of 4
+wedding20.py:100:3: E111 indentation is not a multiple of 4
+wedding20.py:102:3: E111 indentation is not a multiple of 4
+wedding20.py:103:3: E111 indentation is not a multiple of 4
+wedding20.py:104:3: E111 indentation is not a multiple of 4
+wedding20.py:105:3: E111 indentation is not a multiple of 4
+wedding20.py:109:1: E303 too many blank lines (3)
+wedding20.py:111:3: E111 indentation is not a multiple of 4
+wedding20.py:119:3: E111 indentation is not a multiple of 4
+wedding20.py:120:3: E111 indentation is not a multiple of 4
+wedding20.py:121:12: E225 missing whitespace around operator
+wedding20.py:123:7: E111 indentation is not a multiple of 4
+wedding20.py:123:12: E275 missing whitespace after keyword
+wedding20.py:123:12: E703 statement ends with a semicolon
+wedding20.py:125:7: E111 indentation is not a multiple of 4
+wedding20.py:127:7: E111 indentation is not a multiple of 4
+wedding20.py:128:7: E111 indentation is not a multiple of 4
+wedding20.py:129:7: E111 indentation is not a multiple of 4
+wedding20.py:129:21: E703 statement ends with a semicolon
+wedding20.py:131:7: E111 indentation is not a multiple of 4
+wedding20.py:131:13: E231 missing whitespace after ','
+wedding20.py:131:18: E231 missing whitespace after ','
+wedding20.py:131:36: E231 missing whitespace after ','
+wedding20.py:131:47: E231 missing whitespace after ','
+wedding20.py:132:7: E111 indentation is not a multiple of 4
+wedding20.py:133:7: E111 indentation is not a multiple of 4
+wedding20.py:135:7: E111 indentation is not a multiple of 4
+wedding20.py:135:13: E231 missing whitespace after ','
+wedding20.py:136:7: E111 indentation is not a multiple of 4
+wedding20.py:136:28: E703 statement ends with a semicolon
+wedding20.py:137:7: E111 indentation is not a multiple of 4
+wedding20.py:137:37: E703 statement ends with a semicolon
+wedding20.py:139:7: E111 indentation is not a multiple of 4
+wedding20.py:139:13: E231 missing whitespace after ','
+wedding20.py:139:18: E231 missing whitespace after ','
+wedding20.py:139:23: E231 missing whitespace after ','
+wedding20.py:139:27: E221 multiple spaces before operator
+wedding20.py:139:41: E231 missing whitespace after ','
+wedding20.py:139:52: E231 missing whitespace after ','
+wedding20.py:139:66: E231 missing whitespace after ','
+wedding20.py:140:7: E111 indentation is not a multiple of 4
+wedding20.py:141:7: E111 indentation is not a multiple of 4
+wedding20.py:142:1: W293 blank line contains whitespace
+wedding20.py:145:3: E111 indentation is not a multiple of 4
+wedding20.py:145:9: W292 no newline at end of file
