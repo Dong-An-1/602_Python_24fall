@@ -1,1 +1,98 @@
-A
+
+已打开会话。共2封邮件。所有邮件均已读。
+
+跳至内容
+通过屏幕阅读器使用 Boston University 邮件
+
+第 3 个会话，共 1,394 个
+605
+收件箱
+
+Dong An
+附件11月18日周一 16:27 (22小时前)
+Dong AN Major: Electronic & Computer Engineering Degree Program: Master of Science Department of Electrical and Computer Engineering College of Engineering Bost
+
+Ziheng Qu
+附件
+14:25 (24分钟前)
+发送至 我
+
+
+1 个附件
+  •  已由 Gmail 扫描
+import importlib
+import os
+import csv
+
+# 测试 shuffle 方法
+def test_shuffle():
+    submissions_dir = "./submissions/"
+    for file in os.listdir(submissions_dir):
+        if file.endswith("_wedding.py"):
+            module_name = file[:-3]  # 移除 .py 后缀
+            student_module = importlib.import_module(f"submissions.{module_name}")
+            Wedding = getattr(student_module, "Wedding")
+            w = Wedding()
+
+            # 定义测试用例和预期结果
+            test_cases = {
+                "abc": sorted(["abc", "bac", "cab", "acb", "bca", "cba"]),
+                "ab": sorted(["ab", "ba"]),
+                "a": sorted(["a"]),
+            }
+
+            for input_data, expected_output in test_cases.items():
+                assert sorted(w.shuffle(input_data)) == expected_output, f"Failed shuffle: {input_data}"
+
+# 测试 barriers 方法
+def test_barriers():
+    submissions_dir = "./submissions/"
+    for file in os.listdir(submissions_dir):
+        if file.endswith("_wedding.py"):
+            module_name = file[:-3]  # 移除 .py 后缀
+            student_module = importlib.import_module(f"submissions.{module_name}")
+            Wedding = getattr(student_module, "Wedding")
+            w = Wedding()
+
+            # 定义测试用例和预期结果
+            test_cases = {
+                ("abc", [1]): sorted(["a|bc", "ab|c"]),
+                ("ab", [0]): sorted(["|ab"]),
+                ("a", [0]): sorted(["|a"]),
+            }
+
+            for (input_data, barriers), expected_output in test_cases.items():
+                assert sorted(w.barriers(input_data, barriers)) == expected_output, f"Failed barriers: {input_data} with barriers {barriers}"
+
+# 批量运行所有学生提交并记录结果
+def test_all_submissions():
+    submissions_dir = "./submissions/"
+    results_file = "./results/scores.csv"
+    results = []
+
+    for file in os.listdir(submissions_dir):
+        if file.endswith("_wedding.py"):
+            module_name = file[:-3]  # 移除 .py 后缀
+            try:
+                # 动态加载学生代码
+                student_module = importlib.import_module(f"submissions.{module_name}")
+                Wedding = getattr(student_module, "Wedding")  # 获取 Wedding 类
+
+                # 创建实例并运行测试
+                w = Wedding()
+                test_shuffle()
+                test_barriers()
+
+                results.append((module_name, "Pass"))
+            except AssertionError as e:
+                results.append((module_name, f"Fail: {str(e)}"))
+            except Exception as e:
+                results.append((module_name, f"Error: {str(e)}"))
+
+    # 保存测试结果到 CSV 文件
+    with open(results_file, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Student", "Result"])
+        writer.writerows(results)
+test_wedding.py
+当前显示test_wedding.py。 
