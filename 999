@@ -1,0 +1,115 @@
+import cv2
+import numpy as np
+import pytesseract
+import os
+
+pytesseract.pytesseract.tesseract_cmd = r"/usr/local/bin/tesseract"
+
+COLORS = {
+    "green": (106, 170, 100),
+    "yellow": (201, 180, 88),
+    "gray": (120, 124, 126),
+}
+
+WORD_LIST = ["suite", "quiet", "extra", "crate", "input", "light", "guile"]
+
+def color_distance(color1, color2):
+    color1 = np.array(color1, dtype=np.int32)
+    color2 = np.array(color2, dtype=np.int32)
+    return np.sqrt(np.sum((color1 - color2) ** 2))
+
+def detect_color_from_cell(cell):
+    h, w, _ = cell.shape
+    sample_points = [
+        (h // 3, w // 3), (h // 3, 2 * w // 3),
+        (2 * h // 3, w // 3), (2 * h // 3, 2 * w // 3),
+        (h // 2, w // 2)
+    ]
+    colors = [cell[y, x] for y, x in sample_points]
+    avg_color = np.mean(colors, axis=0)
+
+    if np.all(avg_color > 245):  # 白色背景
+        return "white"
+
+    min_distance = float("inf")
+    detected_color = None
+    for color_name, ref_color in COLORS.items():
+        dist = color_distance(avg_color, ref_color)
+        if dist < min_distance and dist < 100:
+            min_distance = dist
+            detected_color = color_name
+    return detected_color or "unknown"
+
+def preprocess_cell(cell):
+    gray = cv2.cvtColor(cell, cv2.COLOR_BGR2GRAY)
+    blurred = cv2.GaussianBlur(gray, (3, 3), 0)
+    _, binary = cv2.threshold(blurred, 150, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    return binary
+
+def process_image(image_path):
+    image = cv2.imread(image_path)
+    if image is None:
+        raise ValueError(f"无法加载图片，请检查路径！路径：{image_path}")
+
+    image = cv2.resize(image, (500, 500))
+    height, width, _ = image.shape
+    grid_size = width // 5
+
+    feedback = []
+    for row in range(3):
+        for col in range(5):
+            x1, y1 = col * grid_size, row * grid_size
+            x2, y2 = x1 + grid_size, y1 + grid_size
+            cell = image[y1:y2, x1:x2]
+
+            detected_color = detect_color_from_cell(cell)
+            binary = preprocess_cell(cell)
+            letter = pytesseract.image_to_string(binary, config='--psm 10').strip()
+
+            if len(letter) == 1 and letter.isalpha():
+                feedback.append((letter.lower(), detected_color))
+
+            print(f"Row {row}, Col {col}: Letter: {letter}, Detected Color: {detected_color}")
+
+    print(f"提取的反馈信息：{feedback}")
+    return feedback
+
+def filter_words(feedback):
+    possible_words = WORD_LIST.copy()
+    yellow_letters = {}
+    green_letters = {}
+
+    for index, (letter, color) in enumerate(feedback):
+        if color == "green":
+            green_letters[index] = letter
+        elif color == "yellow":
+            yellow_letters[letter] = yellow_letters.get(letter, []) + [index]
+        elif color == "gray":
+            possible_words = [word for word in possible_words if letter not in word]
+
+    for index, letter in green_letters.items():
+        possible_words = [word for word in possible_words if word[index] == letter]
+
+    for letter, excluded_positions in yellow_letters.items():
+        possible_words = [
+            word for word in possible_words
+            if letter in word and all(word[pos] != letter for pos in excluded_positions)
+        ]
+
+    return possible_words or ["没有匹配的单词，请检查反馈信息！"]
+
+def main():
+    image_path = input("请输入 Wordle 游戏截图的完整路径：").strip()
+    if not os.path.exists(image_path):
+        print(f"图片路径无效！路径：{image_path}")
+        return
+
+    try:
+        feedback = process_image(image_path)
+        possible_words = filter_words(feedback)
+        print(f"可能的单词列表：{possible_words}")
+    except ValueError as e:
+        print(e)
+
+if __name__ == "__main__":
+    main()
