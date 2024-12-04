@@ -1,0 +1,162 @@
+import cv2
+import numpy as np
+import pytesseract
+import os
+
+# 配置 Tesseract 的路径
+pytesseract.pytesseract.tesseract_cmd = r"/usr/local/bin/tesseract"
+
+# 定义颜色参考值
+COLORS = {
+    "green": [(106, 170, 100), (100, 160, 90), (110, 180, 110)],
+    "yellow": [(201, 180, 88), (210, 190, 90), (190, 170, 80)],
+    "gray": [(120, 124, 126), (100, 100, 100), (140, 140, 140)],
+}
+
+# Wordle 的单词列表（可自定义）
+WORD_LIST = ["suite", "quiet", "extra", "crate", "input", "light", "guile"]
+
+# 计算颜色距离
+def color_distance(color1, color2):
+    color1 = np.array(color1, dtype=np.int32)
+    color2 = np.array(color2, dtype=np.int32)
+    return np.sqrt(np.sum((color1 - color2) ** 2))
+
+# 检测单元格颜色
+def detect_color_from_cell(cell):
+    h, w, _ = cell.shape
+
+    # 更新采样点，避免采样到单元格边缘
+    sample_points = [
+        (h // 4, w // 4), (h // 4, 3 * w // 4),
+        (3 * h // 4, w // 4), (3 * h // 4, 3 * w // 4),
+        (h // 2, w // 2)
+    ]
+
+    # 提取采样点的颜色值
+    colors = [cell[y, x] for y, x in sample_points]
+    avg_color = np.mean(colors, axis=0)
+
+    min_distance = float("inf")
+    detected_color = None
+
+    # 遍历所有参考颜色
+    for color_name, ref_colors in COLORS.items():
+        for ref_color in ref_colors:
+            dist = color_distance(avg_color, ref_color)
+            if dist < min_distance and dist < 200:  # 放宽匹配阈值
+                min_distance = dist
+                detected_color = color_name
+
+    # 如果没有匹配的颜色，返回 "unknown"
+    return detected_color or "unknown"
+
+# 图像预处理
+def preprocess_cell(cell):
+    gray = cv2.cvtColor(cell, cv2.COLOR_BGR2GRAY)
+    # 增强对比度
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    gray = clahe.apply(gray)
+    blurred = cv2.GaussianBlur(gray, (3, 3), 0)
+    _, binary = cv2.threshold(blurred, 120, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    return binary
+
+# 处理图片并提取反馈
+def process_image(image_path):
+    image = cv2.imread(image_path)
+    if image is None:
+        raise ValueError(f"无法加载图片，请检查路径！路径：{image_path}")
+
+    # 动态调整图片大小（保持比例）
+    height, width, _ = image.shape
+    if height != 500 or width != 500:
+        scale_factor = 500 / max(height, width)
+        image = cv2.resize(image, (int(width * scale_factor), int(height * scale_factor)))
+
+    # 动态计算单元格大小
+    grid_size = image.shape[1] // 5  # 每个单元格宽度和高度
+    cell_margin = grid_size // 10   # 预留单元格边距，避免采样到框之间的间距
+
+    feedback = []
+    filled_rows = 0  # 记录已填写行数
+
+    for row in range(5):  # 遍历行
+        row_feedback = []
+        is_empty_row = True
+
+        for col in range(5):  # 遍历列
+            # 动态计算单元格边界，排除间距区域
+            x1 = col * grid_size + cell_margin
+            y1 = row * grid_size + cell_margin
+            x2 = x1 + grid_size - 2 * cell_margin
+            y2 = y1 + grid_size - 2 * cell_margin
+
+            # 确保采样区域落在单元格内
+            cell = image[y1:y2, x1:x2]
+
+            # 检测颜色
+            detected_color = detect_color_from_cell(cell)
+
+            # 文本识别
+            binary = preprocess_cell(cell)
+            letter = pytesseract.image_to_string(binary, config='--psm 6').strip()
+
+            # 填写行数据
+            if detected_color != "unknown":
+                is_empty_row = False
+            if len(letter) == 1 and letter.isalpha():
+                row_feedback.append((letter.lower(), detected_color))
+            else:
+                row_feedback.append((" ", "unknown"))
+
+        if not is_empty_row:  # 如果该行非空
+            filled_rows += 1
+
+        feedback.extend(row_feedback)
+        print(f"Row {row}: {row_feedback}")
+
+    print(f"已填写行数：{filled_rows}，空白行数：{5 - filled_rows}")
+    return feedback, filled_rows
+
+# 根据反馈筛选单词
+def filter_words(feedback):
+    possible_words = WORD_LIST.copy()
+    yellow_letters = {}
+    green_letters = {}
+
+    for index, (letter, color) in enumerate(feedback):
+        if color == "green":
+            green_letters[index % 5] = letter
+        elif color == "yellow":
+            yellow_letters[letter] = yellow_letters.get(letter, []) + [index % 5]
+        elif color == "gray":
+            possible_words = [word for word in possible_words if letter not in word]
+
+    for index, letter in green_letters.items():
+        possible_words = [word for word in possible_words if word[index] == letter]
+
+    for letter, excluded_positions in yellow_letters.items():
+        possible_words = [
+            word for word in possible_words
+            if letter in word and all(word[pos] != letter for pos in excluded_positions)
+        ]
+
+    return possible_words or ["没有匹配的单词，请检查反馈信息！"]
+
+# 主函数
+def main():
+    image_path = input("请输入 Wordle 游戏截图的完整路径：").strip()
+    if not os.path.exists(image_path):
+        print(f"图片路径无效！路径：{image_path}")
+        return
+
+    try:
+        feedback, filled_rows = process_image(image_path)  # 提取反馈
+        possible_words = filter_words(feedback)  # 筛选单词
+        print(f"可能的单词列表：{possible_words}")
+        print(f"已填写的行数：{filled_rows}，剩余空白行数：{5 - filled_rows}")
+    except ValueError as e:
+        print(e)
+
+if __name__ == "__main__":
+    main()
