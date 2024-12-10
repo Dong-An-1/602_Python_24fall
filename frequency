@@ -1,0 +1,31 @@
+import nltk
+from nltk.corpus import words
+from collections import Counter
+
+# Offline methods: NLTK(the method we choose to use) and PyEnchant are suitable for scenarios requiring local processing.
+# Online APIs: Datamuse and Wordnik provide richer word databases but require an internet connection.
+
+nltk.download('words')
+
+# Load the word list
+word_list = [word.lower() for word in words.words()]
+
+# Filter words based on the number of letters and required letters
+def search_words(required_letters):
+    return [
+        word for word in word_list
+        if len(word) == 5 and all(letter in word for letter in required_letters)
+    ]
+
+five_letter_word_list = search_words([])
+
+
+
+all_letters = ''.join(five_letter_word_list)
+
+letter_counts = Counter(all_letters)
+
+sorted_letter_counts = sorted(letter_counts.items(), key=lambda x: x[1], reverse=True)
+
+for letter, count in sorted_letter_counts:
+    print(f"{letter}: {count}")
